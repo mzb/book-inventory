@@ -1,31 +1,36 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var MongoClient = require('mongodb').MongoClient;
-var mongoUrl = 'mongodb://localhost:27017/book_inventory';
-var db = MongoClient.connect(mongoUrl).then(function(db) {
-	return db.collection('books');
-});
+var stockRepository = require('./stockRepository');
 
 var app = express();
 
 app.use(bodyParser.json());
 
-app.post('/stock', function(req, resp) {
+app.post('/stock', function(req, resp, next) {
 	var book = req.body;
-	db.then(function(collection) { 
-		collection.updateOne({isbn: book.isbn}, book, {upsert: true}); 
-	})
-	.then(function() { resp.send(book); });
+	stockRepository.save(book)
+		.then(function() { resp.send(book); })
+		.catch(next);
 });
 
 app.get('/stock', function(req, resp, next) {
-	return db.then(function(collection) { 
-		return collection.find({}).toArray();
-	})
-	.then(function(books) { 
-		resp.json(books);
-	})
+	return stockRepository.list()
+		.then(function(books) { 
+			resp.json(books);
+		})
+	.catch(next);
+});
+
+app.get('/stock/:isbn', function(req, resp, next) {
+	return stockRepository.getCount(req.params.isbn)
+		.then(function(count) {
+			if(count === null) {
+				resp.status(404).send();
+			} else {
+				resp.json({count: count});
+			}
+		})
 	.catch(next);
 });
 

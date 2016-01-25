@@ -6,31 +6,13 @@ var app = express();
 module.exports = function(stockRepository) {
 	app.use(bodyParser.json());
 
-	app.post('/stock', function(req, resp, next) {
-		stockRepository.save(req.body.isbn, req.body.count)
-			.then(function() { resp.send(req.body); })
-			.catch(next);
-	});
+	var routes = require('./routes')(stockRepository);
 
-	app.get('/stock', function(req, resp, next) {
-		return stockRepository.list()
-			.then(function(books) { 
-				resp.json(books);
-			})
-		.catch(next);
-	});
+	app.post('/stock', routes.add);
 
-	app.get('/stock/:isbn', function(req, resp, next) {
-		return stockRepository.getCount(req.params.isbn)
-			.then(function(count) {
-				if(count === null) {
-					resp.status(404).send();
-				} else {
-					resp.json({count: count});
-				}
-			})
-		.catch(next);
-	});
+	app.get('/stock', routes.list);
+
+	app.get('/stock/:isbn', routes.getCount);
 
 	app.use(function(err, req, resp, next) {
 		resp.status(err.status || 500);

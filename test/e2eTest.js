@@ -3,18 +3,23 @@ var assert = require('assert');
 var stockRepository = require('../inMemoryStockRepository')();
 var app = require('../app')(stockRepository);
 
+beforeEach(function() {
+	stockRepository.clear();
+});
+
 describe('POST /stock', function() {
 	it('stocks books', function(done) {
+		var book = {"isbn": "1234567890", "count": 10};
 		request(app)
 			.post('/stock')
-			.send({"isbn": "1234567890", "count": 10})
+			.send(book)
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err, res) {
 				if(err) return done(err);
-				assert.equal(res.body.isbn, "1234567890");
-				assert.equal(res.body.count, 10);
+				assert.deepEqual(res.body, book);
 				done();
 			});
 	});
 });
+

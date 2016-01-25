@@ -1,10 +1,12 @@
 module.exports = function(stockRepository) {
 	return {
-		add: function(req, resp, next) {
-			stockRepository.save(req.body.isbn, req.body.count)
-				.then(function() { resp.send(req.body); })
+		update: function(req, resp, next) {
+			var book = req.body;
+			stockRepository.update(book.isbn, book.count)
+				.then(function() { resp.json(book); })
 				.catch(next);
 		},
+
 		list: function(req, resp, next) {
 			return stockRepository.list()
 				.then(function(books) { 
@@ -12,6 +14,7 @@ module.exports = function(stockRepository) {
 				})
 			.catch(next);
 		},
+
 		getCount: function(req, resp, next) {
 			return stockRepository.getCount(req.params.isbn)
 				.then(function(count) {

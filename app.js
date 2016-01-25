@@ -19,10 +19,14 @@ app.post('/stock', function(req, resp) {
 	.then(function() { resp.send(book); });
 });
 
-app.get('/stock', function(req, resp) {
+app.get('/stock', function(req, resp, next) {
 	return db.then(function(collection) { 
 		return collection.find({}).toArray();
-	}).then(function(books) { resp.json(books) });
+	})
+	.then(function(books) { 
+		resp.json(books);
+	})
+	.catch(next);
 });
 
 app.use(function(err, req, resp, next) {

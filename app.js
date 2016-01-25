@@ -23,6 +23,4 @@ app.use(function(req, resp, next) {
 	next(err);
 });
 
-app.listen(3000, function() {
-  console.log('Server started');
-});
+module.exports = app;

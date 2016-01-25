@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "mocha",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.14.2",
+    "body-parser": "1.14.2",
     "express": "4.13.4"
+  },
+  "devDependencies": {
+    "mocha": "2.3.4",
+    "supertest": "1.1.0"
   }
 }

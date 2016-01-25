@@ -1,9 +1,10 @@
 var request = require('supertest');
 var assert = require('assert');
-var app = require('../app');
+var stockRepository = require('../inMemoryStockRepository')();
+var app = require('../app')(stockRepository);
 
 describe('POST /stock', function() {
-	it('echoes the request', function(done) {
+	it('stocks books', function(done) {
 		request(app)
 			.post('/stock')
 			.send({"isbn": "1234567890", "count": 10})

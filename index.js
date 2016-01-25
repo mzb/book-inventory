@@ -1,23 +1,28 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app = express();
 
-app.use(function(req, resp, next) {
-	console.log('Got request');
-	next();
+app.use(bodyParser.json());
+
+app.post('/stock', function(req, resp) {
+	resp.send(req.body);
+});
+
+app.use(function(err, req, resp, next) {
+  resp.status(err.status || 500);
+	resp.json({
+		message: err.message,
+		error: 'production' === process.env.NODE_ENV ? {} : err
+	});
 });
 
 app.use(function(req, resp, next) {
-	console.log('Got request 2!');
-	next();
+	var err = new Error('Not found');
+	err.status = 404;
+	next(err);
 });
 
-app.get('/', function(req, resp, next) {
-	console.log('Route-specific middleware');
-	next();
-}, function(req, res) {
-  res.send('Hello World!');
-});
-
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(3000, function() {
+  console.log('Server started');
 });

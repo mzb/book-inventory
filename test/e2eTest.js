@@ -46,6 +46,7 @@ describe('GET /stock/:isbn', function() {
 
 		request(app)
 			.get('/stock/1234')
+			.set('Accept', 'application/json')
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err, res) {

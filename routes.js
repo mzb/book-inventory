@@ -19,7 +19,7 @@ module.exports = function(stockRepository) {
 			return stockRepository.getCount(req.params.isbn)
 				.then(function(count) {
 					if(count === null) {
-						resp.status(404).send();
+						resp.status(404).json();
 					} else {
 						resp.json({count: count});
 					}

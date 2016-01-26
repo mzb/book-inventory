@@ -8,7 +8,7 @@
     "start": "node server.js",
     "lint": "jshint --exclude=node_modules/** **.js",
     "test:xunit": "npm run test -- --reporter xunit",
-	"watch": "nodemon server.js"
+    "watch": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "mongodb": "2.1.4"
   },
   "devDependencies": {
+    "heroin-js": "^1.5.0",
     "jshint": "2.9.1",
     "mocha": "2.3.4",
     "nodemon": "1.8.1",
